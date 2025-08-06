@@ -9,16 +9,42 @@ public class Main {
     public static void main(String[] args) {
 
         //Use session factory only once as it is heavyweight
-        SessionFactory sf = new Configuration()
+        SessionFactory sf_student = new Configuration()
                 .addAnnotatedClass(org.varun.Student.class)
                 .configure()
                 .buildSessionFactory();
-        Session session = sf.openSession();
-        new Main().createData(session);
-//        new Main().fetchData(session);
+
+//        SessionFactory sf_alien = new Configuration()
+//                .addAnnotatedClass(org.varun.AlienEntity.class)
+//                .configure()
+//                .buildSessionFactory();
+
+        Session session = sf_student.openSession();
+//        new Main().createData(session);
+        new Main().fetchData(session);
 //        new Main().updateData(session);
 //        new Main().deleteData(session);
-        sf.close();
+//        new Main().createAlien(session);
+//        new Main().fetchAlien(session);
+        sf_student.close();
+    }
+
+    public void createAlien(Session session) {
+        AlienEntity a1 = new AlienEntity();
+        a1.setAid(101);
+        a1.setAlienName("Varun");
+        a1.setTech("Java");
+        Transaction tr = session.beginTransaction();
+        session.persist(a1);
+        tr.commit();
+        session.close();
+    }
+
+    public void fetchAlien(Session session) {
+        AlienEntity a = null;
+
+        a = session.find(AlienEntity.class, 101);
+        System.out.println(a);
     }
 
     public void createData(Session session) {

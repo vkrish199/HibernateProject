@@ -21,3 +21,6 @@
          read -> find method of session
          update -> merge method of session (merge can also create if data is not present)
          delete -> remove method of session
+* We can have different class name for a table and different property name for a column
+* refer AlienEntity.java - we can use @Table and @Column annotations
+* we can use @Transient annotation if we don't want the variable to be part of the table
