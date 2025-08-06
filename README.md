@@ -24,3 +24,13 @@
 * We can have different class name for a table and different property name for a column
 * refer AlienEntity.java - we can use @Table and @Column annotations
 * we can use @Transient annotation if we don't want the variable to be part of the table
+* @Embeddable annotation can be used to embed fields from a different model into entity model
+* We have different mapping annotations - @ManyToOne
+                                          @OneToMany
+                                          @ManyToMany
+                                          @OneToOne
+* OneToOne - AlienEntity has a OneToOne mapping with LaptopEntity
+* OneToMany and ManyToOne - In this case we have to create a List of laptops
+* Note that by just adding OneToMany/ManyToOne  
+ it automatically creates a third mapping table, if we don't want to create 3rd table we   
+ need to add a reference with mapped by and ManyToOne in the other table

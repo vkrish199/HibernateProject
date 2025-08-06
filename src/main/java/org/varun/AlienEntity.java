@@ -2,6 +2,8 @@ package org.varun;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table(name="alien")
 public class AlienEntity {
@@ -13,6 +15,13 @@ public class AlienEntity {
     private String tech;
     @Transient
     private int counter;
+//    private LaptopEmbeddable laptop;
+//    @OneToOne
+//    private LaptopEntity laptopEntity;
+    //OneToMany automatically creates a third table alien_laptop
+    //if we don't want a third table, we can create a reference in laptop table
+    @OneToMany(mappedBy = "alienEntity")
+    private List<LaptopEntity> laptopEntities;
 
     public int getAid() {
         return aid;
@@ -38,12 +47,30 @@ public class AlienEntity {
         this.tech = tech;
     }
 
+    public List<LaptopEntity> getLaptopEntities() {
+        return laptopEntities;
+    }
+
+    public void setLaptopEntities(List<LaptopEntity> laptopEntities) {
+        this.laptopEntities = laptopEntities;
+    }
+
+    //    public LaptopEmbeddable getLaptop() {
+//        return laptop;
+//    }
+//
+//    public void setLaptop(LaptopEmbeddable laptop) {
+//        this.laptop = laptop;
+//    }
+
     @Override
     public String toString() {
-        return "Alien{" +
+        return "AlienEntity{" +
                 "aid=" + aid +
-                ", aname='" + alienName + '\'' +
+                ", alienName='" + alienName + '\'' +
                 ", tech='" + tech + '\'' +
+                ", counter=" + counter +
+                ", laptopEntities=" + laptopEntities +
                 '}';
     }
 }
