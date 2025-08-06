@@ -10,9 +10,9 @@ public class Main {
 
         Student s1 = new Student();
 
-        s1.setsName("Varun");
-        s1.setRollNo(101);
-        s1.setsAge(33);
+        s1.setsName("Rama");
+        s1.setRollNo(105);
+        s1.setsAge(84);
 
         Configuration cfg = new Configuration();
         cfg.addAnnotatedClass(org.varun.Student.class);
