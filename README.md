@@ -17,3 +17,7 @@
 * We can use @Entity annotation provide by Java persistence API
 * We use JPA annotations
 * @Id is needed on atleast one column to indicate a primary key
+* CRUD - create -> persist method of session
+         read -> find method of session
+         update -> merge method of session (merge can also create if data is not present)
+         delete -> remove method of session

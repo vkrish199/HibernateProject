@@ -14,31 +14,58 @@ public class Main {
                 .configure()
                 .buildSessionFactory();
         Session session = sf.openSession();
-//        new Main().createData(session);
-        new Main().fetchData(session);
+        new Main().createData(session);
+//        new Main().fetchData(session);
+//        new Main().updateData(session);
+//        new Main().deleteData(session);
         sf.close();
     }
 
     public void createData(Session session) {
         //only needed when we are persisting
         Transaction tr = session.beginTransaction();
-        Student s1 = new Student();
+        Student s = new Student();
 
-        s1.setsName("Anu");
-        s1.setRollNo(107);
-        s1.setsAge(65);
+        s.setsName("Anu");
+        s.setRollNo(107);
+        s.setsAge(65);
         //we had save before which is now deprecated in favour of persist
-        session.persist(s1);
+        session.persist(s);
         tr.commit();
         session.close();
 
-        System.out.println(s1);
+        System.out.println(s);
     }
 
     public void fetchData(Session session) {
-        Student s2 = null;
+        Student s = null;
         //we had get before which is now deprecated in favour of find
-        s2 = session.find(Student.class, 107);
-        System.out.println(s2);
+        s = session.find(Student.class, 107);
+        session.close();
+        System.out.println(s);
+    }
+
+    public void updateData(Session session) {
+        Student s = new Student();
+
+        s.setsAge(2);
+        s.setRollNo(104);
+        s.setsName("Parnika");
+        //since it's an update, we need transaction
+        Transaction tr = session.beginTransaction();
+        //merge will fire a select query and will either insert/update based on data
+        session.merge(s);
+        tr.commit();
+        session.close();
+        System.out.println(s);
+    }
+
+    public void deleteData(Session session) {
+        Student s = null;
+        s = session.find(Student.class, 107);
+        Transaction tr = session.beginTransaction();
+        session.remove(s);
+        tr.commit();
+        session.close();
     }
 }
