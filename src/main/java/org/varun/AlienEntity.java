@@ -20,7 +20,9 @@ public class AlienEntity {
 //    private LaptopEntity laptopEntity;
     //OneToMany automatically creates a third table alien_laptop
     //if we don't want a third table, we can create a reference in laptop table
-    @OneToMany(mappedBy = "alienEntity")
+//    @OneToMany(mappedBy = "alienEntity")
+//    private List<LaptopEntity> laptopEntities;
+    @ManyToMany
     private List<LaptopEntity> laptopEntities;
 
     public int getAid() {

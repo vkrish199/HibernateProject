@@ -34,3 +34,9 @@
 * Note that by just adding OneToMany/ManyToOne  
  it automatically creates a third mapping table, if we don't want to create 3rd table we   
  need to add a reference with mapped by and ManyToOne in the other table
+* ManyToMany - Add @ManyToMany annotation in both the models and create lists
+* This also creates 2 redundant mapping tables (alien_laptop and laptop_alien) due to
+    ego clashes
+* Use same Mapped by to fix this problem - ex: @ManyToMany(mappedBy = "laptopEntities")
+* Lazy and Eager Fetching -
+    

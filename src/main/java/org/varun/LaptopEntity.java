@@ -2,6 +2,8 @@ package org.varun;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table(name="laptop")
 public class LaptopEntity {
@@ -11,8 +13,10 @@ public class LaptopEntity {
     private String brand;
     private String model;
     private int ram;
-    @ManyToOne
-    private AlienEntity alienEntity;
+//    @ManyToOne
+//    private AlienEntity alienEntity;
+    @ManyToMany(mappedBy = "laptopEntities")
+    private List<AlienEntity> alienEntities;
 
     public int getLid() {
         return lid;
@@ -46,12 +50,12 @@ public class LaptopEntity {
         this.ram = ram;
     }
 
-    public AlienEntity getAlienEntity() {
-        return alienEntity;
+    public List<AlienEntity> getAlienEntities() {
+        return alienEntities;
     }
 
-    public void setAlienEntity(AlienEntity alienEntity) {
-        this.alienEntity = alienEntity;
+    public void setAlienEntities(List<AlienEntity> alienEntities) {
+        this.alienEntities = alienEntities;
     }
 
     @Override

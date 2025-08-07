@@ -60,21 +60,46 @@ public class Main {
         a1.setAlienName("Varun");
         a1.setTech("Java");
 
+        AlienEntity a2 = new AlienEntity();
+        a2.setAid(102);
+        a2.setAlienName("Chinmayi");
+        a2.setTech("Ruby");
+
+        AlienEntity a3 = new AlienEntity();
+        a3.setAid(103);
+        a3.setAlienName("Parnika");
+        a3.setTech("Python");
+
         //Laptop is embeddable into AlienEntity, columns are added to alien
         //a1.setLaptop(l1);
+
+        //One to One
         //in below case alien has a one to one mapping to laptop
         //a1.setLaptopEntity(l1);
-        a1.setLaptopEntities(Arrays.asList(l1,l2,l3));
+
+        //One to Many and Many to One
+//        a1.setLaptopEntities(Arrays.asList(l1,l2,l3));
         //Do below if you don't want a third table to be created
-        l1.setAlienEntity(a1);
-        l2.setAlienEntity(a1);
-        l3.setAlienEntity(a1);
+//        l1.setAlienEntity(a1);
+//        l2.setAlienEntity(a1);
+//        l3.setAlienEntity(a1);
+
+        //Many to Many
+        a1.setLaptopEntities(Arrays.asList(l1,l2));
+        a2.setLaptopEntities(Arrays.asList(l2,l3));
+        a3.setLaptopEntities(Arrays.asList(l1));
+
+        l1.setAlienEntities(Arrays.asList(a1, a3));
+        l2.setAlienEntities(Arrays.asList(a1, a2));
+        l3.setAlienEntities(Arrays.asList(a1));
 
         Transaction tr = session.beginTransaction();
         session.persist(l1);
         session.persist(l2);
         session.persist(l3);
         session.persist(a1);
+        session.persist(a2);
+        session.persist(a3);
         tr.commit();
         session.close();
     }
@@ -82,7 +107,7 @@ public class Main {
     public void fetchAlien(Session session) {
         AlienEntity a = null;
 
-        a = session.find(AlienEntity.class, 101);
+        a = session.find(AlienEntity.class, 102);
         System.out.println(a);
         session.close();
     }
