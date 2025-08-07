@@ -4,6 +4,8 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
+import org.varun.eager_and_lazy.Customer;
+import org.varun.eager_and_lazy.Order;
 
 import java.util.Arrays;
 
@@ -16,20 +18,76 @@ public class Main {
 //                .configure()
 //                .buildSessionFactory();
 
-        SessionFactory sf_alien = new Configuration()
-                .addAnnotatedClass(org.varun.AlienEntity.class)
-                .addAnnotatedClass(org.varun.LaptopEntity.class)
+//        SessionFactory sf_alien = new Configuration()
+//                .addAnnotatedClass(org.varun.AlienEntity.class)
+//                .addAnnotatedClass(org.varun.LaptopEntity.class)
+//                .configure()
+//                .buildSessionFactory();
+
+        SessionFactory sf_customer = new Configuration()
+                .addAnnotatedClass(org.varun.eager_and_lazy.Customer.class)
+                .addAnnotatedClass(org.varun.eager_and_lazy.Order.class)
                 .configure()
                 .buildSessionFactory();
 
-        Session session = sf_alien.openSession();
+        Session session = sf_customer.openSession();
 //        new Main().createData(session);
 //        new Main().fetchData(session);
 //        new Main().updateData(session);
 //        new Main().deleteData(session);
-        new Main().createAlien(session);
+//        new Main().createAlien(session);
 //        new Main().fetchAlien(session);
-        sf_alien.close();
+        //For eager and lazy fetch refer below
+        new Main().createCustomer(sf_customer);
+        sf_customer.close();
+    }
+
+    public void createCustomer(SessionFactory sf_customer) {
+
+        Session session = sf_customer.openSession();
+        Order o1 = new Order();
+        o1.setOid(100);
+        o1.setOrder_name("Package 1");
+
+        Order o2 = new Order();
+        o2.setOid(200);
+        o2.setOrder_name("Package 2");
+
+        Order o3 = new Order();
+        o3.setOid(300);
+        o3.setOrder_name("Package 3");
+
+        Customer c1 = new Customer();
+        c1.setCid(1);
+        c1.setCname("Varun");
+        c1.setMobile("8095120904");
+
+        Customer c2 = new Customer();
+        c2.setCid(2);
+        c2.setCname("Chinmayi");
+        c2.setMobile("8884212656");
+
+        c1.setOrders(Arrays.asList(o1,o2));
+        c2.setOrders(Arrays.asList(o3));
+
+        Transaction tr = session.beginTransaction();
+        session.persist(o1);
+        session.persist(o2);
+        session.persist(o3);
+        session.persist(c1);
+        session.persist(c2);
+        tr.commit();
+
+        Customer cn1 = session.find(Customer.class, 1);//does not fire a query as we are in the same session
+        System.out.println(cn1);
+        session.close();
+
+        Session s1 = sf_customer.openSession();
+        //By Default this will do a lazy fetch of Orders (beacuse of the one to many mapping)
+        Customer cn2 = s1.find(Customer.class, 1);//this will fire a query as we are in a new session
+        //when we request for it, it will fire a query to orders as well
+//        System.out.println(cn2);
+        s1.close();
     }
 
     public void createAlien(Session session) {

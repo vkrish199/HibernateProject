@@ -39,4 +39,15 @@
     ego clashes
 * Use same Mapped by to fix this problem - ex: @ManyToMany(mappedBy = "laptopEntities")
 * Lazy and Eager Fetching -
+    Hibernate caches the data so in the same session if we insert and try to fetch
+    it doesn't fire a select query again
+    If we open a new session, it will fire a select query
+    Refer Customer and Order and refer createCustomer in Main
+    By Default it does lazy loading, if we want eager, we need to mention it in the annotation
+    @OneToMany(fetch = FetchType.EAGER)
+* Hibernate Caching - In the same session, if we fire a same query , it calls it only once
+  and caches it. Sometimes it's bad because if data changed while we are firing the query, we may
+    not get accurate result.
+    In separate sessions, hibernate by default doesn't allow caching, we have to use some extensive
+    caching mechanism
     
