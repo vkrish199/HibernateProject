@@ -58,4 +58,6 @@
 * Ex: String brand = "Dell";
       Query brand_based_query = session.createQuery("from SimpleLaptop where brand = ?1");
       brand_based_query.setParameter(1, brand);
-    
+* find vs byId,getReference (lazy vs eager loading) : refer getAndLoad method in main
+* L1 cache is given by Hibernate as part of session
+* 

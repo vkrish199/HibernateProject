@@ -51,8 +51,42 @@ public class Main {
 //        new Main().hqlCreateLaptop(session);
 
         //fetching data differently
-        new Main().fetchUsingHql(session);
+//        new Main().fetchUsingHql(session);
+//        new Main().getAndLoad(session);
+        new Main().caching(sf_laptop);
         sf_laptop.close();
+    }
+
+    public void caching(SessionFactory sf_laptop) {
+        Session session = sf_laptop.openSession();
+
+        //Query is executed only once even though we are fetching sl1 and sl2 due to L1 cache
+        SimpleLaptop sl1 = session.find(SimpleLaptop.class, 2);
+        System.out.println(sl1);
+
+        SimpleLaptop sl2 = session.find(SimpleLaptop.class, 2);
+        System.out.println(sl2);
+
+        session.close();
+
+        //New Query is fired due to different session.
+        Session session1 = sf_laptop.openSession();
+        SimpleLaptop sl3 = session1.find(SimpleLaptop.class, 2);
+        System.out.println(sl3);
+        session1.close();
+
+    }
+
+    public void getAndLoad(Session session) {
+        //find is same as get, and when we use below, the query is fired to DB
+        SimpleLaptop lp = session.find(SimpleLaptop.class, 2);
+
+        //byId and getReference is same as load, different between this and find is
+        //this does not fire a query unless we ask it to
+        SimpleLaptop lp2 = session.byId(SimpleLaptop.class).getReference(1);
+
+        //only now it fires a query
+        System.out.println(lp2);
     }
 
     public void fetchUsingHql(Session session) {
