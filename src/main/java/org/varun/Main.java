@@ -1,5 +1,6 @@
 package org.varun;
 
+import jakarta.persistence.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -8,6 +9,7 @@ import org.varun.eager_and_lazy.Customer;
 import org.varun.eager_and_lazy.Order;
 
 import java.util.Arrays;
+import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
@@ -24,13 +26,18 @@ public class Main {
 //                .configure()
 //                .buildSessionFactory();
 
-        SessionFactory sf_customer = new Configuration()
-                .addAnnotatedClass(org.varun.eager_and_lazy.Customer.class)
-                .addAnnotatedClass(org.varun.eager_and_lazy.Order.class)
+//        SessionFactory sf_customer = new Configuration()
+//                .addAnnotatedClass(org.varun.eager_and_lazy.Customer.class)
+//                .addAnnotatedClass(org.varun.eager_and_lazy.Order.class)
+//                .configure()
+//                .buildSessionFactory();
+
+        SessionFactory sf_laptop = new Configuration()
+                .addAnnotatedClass(org.varun.SimpleLaptop.class)
                 .configure()
                 .buildSessionFactory();
 
-        Session session = sf_customer.openSession();
+        Session session = sf_laptop.openSession();
 //        new Main().createData(session);
 //        new Main().fetchData(session);
 //        new Main().updateData(session);
@@ -38,11 +45,58 @@ public class Main {
 //        new Main().createAlien(session);
 //        new Main().fetchAlien(session);
         //For eager and lazy fetch refer below
-        new Main().createCustomer(sf_customer);
-        sf_customer.close();
+//        new Main().createAndFetchCustomer(sf_customer);
+
+        //data needed for HQL
+//        new Main().hqlCreateLaptop(session);
+
+        //fetching data differently
+        new Main().fetchUsingHql(session);
+        sf_laptop.close();
     }
 
-    public void createCustomer(SessionFactory sf_customer) {
+    public void fetchUsingHql(Session session) {
+        String brand = "Dell";
+
+        Query ram_based_query = session.createQuery("from SimpleLaptop where ram=32");
+        List<SimpleLaptop> ram_sls = ram_based_query.getResultList();
+
+        Query brand_based_query = session.createQuery("from SimpleLaptop where brand = ?1");
+        brand_based_query.setParameter(1, brand);
+        List<SimpleLaptop> brand_sls = brand_based_query.getResultList();
+
+        Query select_one_col = session.createQuery("select model from SimpleLaptop where brand = ?1");
+        select_one_col.setParameter(1, brand);
+        List<String> specific_one_col_sls = select_one_col.getResultList();
+
+        Query select_mul_cols = session.createQuery("select brand, model from SimpleLaptop where brand = ?1");
+        select_mul_cols.setParameter(1, brand);
+        List<Object[]> select_mul_cols_sls = select_mul_cols.getResultList();
+
+        System.out.println(ram_sls);
+        System.out.println(brand_sls);
+        System.out.println(specific_one_col_sls);
+
+        for(Object[] data: select_mul_cols_sls) {
+            System.out.println(data[0] + " " + data[1]);
+        }
+        session.close();
+
+    }
+
+    public void hqlCreateLaptop(Session session) {
+        SimpleLaptop l = new SimpleLaptop();
+        l.setSlid(4);
+        l.setBrand("Apple");
+        l.setModel("M1");
+        l.setRam(32);
+        Transaction t = session.beginTransaction();
+        session.persist(l);
+        t.commit();
+        session.close();
+    }
+
+    public void createAndFetchCustomer(SessionFactory sf_customer) {
 
         Session session = sf_customer.openSession();
         Order o1 = new Order();
@@ -86,7 +140,7 @@ public class Main {
         //By Default this will do a lazy fetch of Orders (beacuse of the one to many mapping)
         Customer cn2 = s1.find(Customer.class, 1);//this will fire a query as we are in a new session
         //when we request for it, it will fire a query to orders as well
-//        System.out.println(cn2);
+        System.out.println(cn2);
         s1.close();
     }
 

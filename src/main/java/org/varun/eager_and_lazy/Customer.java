@@ -12,7 +12,8 @@ public class Customer {
     private String mobile;
     private String cname;
     //Not a good idea to eager load for large data set, use lazy
-    @OneToMany(fetch = FetchType.EAGER)
+    //@OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.LAZY)
     private List<Order> orders;
 
     public int getCid() {

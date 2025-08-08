@@ -50,4 +50,12 @@
     not get accurate result.
     In separate sessions, hibernate by default doesn't allow caching, we have to use some extensive
     caching mechanism
+* HQL (Hibernate Query Language) - It is derived from SQL(we deal with tables), in HQL we deal with
+    entities
+* We can use session's createQuery method ex: session.createQuery("from SimpleLaptop where ram=32");
+* query.getResultList(); this will give a list of filtered data based on the query
+* We can also substitute a string value in the query using ? and index:
+* Ex: String brand = "Dell";
+      Query brand_based_query = session.createQuery("from SimpleLaptop where brand = ?1");
+      brand_based_query.setParameter(1, brand);
     
